@@ -9,6 +9,7 @@ import {router as authenticate} from "./routes/authenticate.js"
 
 import { router as user} from './routes/user.js'
 import { router as userData} from './routes/userData.js'
+import { router as fetchQuote } from './routes/fetchQuote.js'
 
 import cors from 'cors'
 
@@ -26,6 +27,7 @@ app.use(cors())
 app.use(express.json())
 app.use('/authenticate',authenticate)
 app.use('/userData',userData)
+app.use('/fetchQuote',fetchQuote)
 //app.use('/seed/populate',seed)
 
 
