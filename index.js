@@ -4,9 +4,12 @@ import dotenv from 'dotenv'
 // import { booksSchema } from './schemas/write'
 // import { log } from './schemas/write'
 // import { user } from './schemas/user'
-import {router as seed} from "./seed.js"
+//import {router as seed} from "./seed.js"
 import {router as authenticate} from "./routes/authenticate.js"
-import {router as user} from "./schemas/user.js"
+
+import { router as user} from './routes/user.js'
+import { router as userData} from './routes/userData.js'
+
 import cors from 'cors'
 
 
@@ -22,8 +25,9 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use('/authenticate',authenticate)
-app.use('/seed/populate',seed)
-app.use('/user',user)
+app.use('/userData',userData)
+//app.use('/seed/populate',seed)
+
 
 
 app.listen(3000, () => {

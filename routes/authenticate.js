@@ -12,7 +12,7 @@ const router = express.Router()
 const User = mongoose.models.user || mongoose.model('user', user)
 const Projects = mongoose.models.projects || mongoose.model('projects',projectSchema)
 
-router.post("/login", async (req, res) => {
+router.route("/login").post( async (req, res) => {
     const { username, password } = req.body; 
 
     try {
@@ -33,6 +33,21 @@ router.post("/login", async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Server error during login" });
     }
+}).delete(async(req,res)=>{
+    const id = req.body.userKey;
+    try{
+        const success = await User.deleteOne({_id:id});
+        if(success){
+            res.json({success:success});
+        }else{
+            res.json({success:false});
+        }
+    
+    }catch{
+        console.error("Deletion could not be fulfilled")
+    }
+    
+
 });
 router.post("/register", async (req, res) => {
     const { username, password } = req.body;

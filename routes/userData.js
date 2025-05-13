@@ -5,8 +5,6 @@ import mongoose from 'mongoose'
 
 const router = express.Router()
 
- 
-
 const Projects = mongoose.models.projects || mongoose.model('projects',projectSchema)
 
 router.route("/").get( async (req, res) => {
@@ -53,12 +51,8 @@ router.route("/").get( async (req, res) => {
        
         if(clearData.deletedCount > 0){
             
-            if(created){
+       
                 res.status(200).json({success:true})
-            }else{
-                console.log("data could not be created after deletion")
-            }
-            
             
         }else{
             res.json({success:false})
