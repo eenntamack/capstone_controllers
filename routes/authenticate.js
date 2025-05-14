@@ -12,7 +12,18 @@ const router = express.Router()
 const User = mongoose.models.user || mongoose.model('user', user)
 const Projects = mongoose.models.projects || mongoose.model('projects',projectSchema)
 
-router.route("/login").post( async (req, res) => {
+router.route("/login").get(async(req,res)=>{
+    const key = req.params.userKey;
+    const pass = req.params.pass;
+    
+    const user = await User.findById(key)
+    const match = await bcrypt.compare(pass, user.password);
+    if(match){
+        res.json({password: user.password, inputPassword:match})
+    }else{
+        console.error("error fetching user")
+    }
+}).post( async (req, res) => {
     const { username, password } = req.body; 
 
     try {
@@ -32,6 +43,27 @@ router.route("/login").post( async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error during login" });
+    }
+}).put(async(req,res)=>{
+    const newPass = req.body.newPass
+    const key = req.body.key
+
+    try{
+        const user = await User.findById(key);
+
+        if(user){
+            
+            const hashedPassword = await bcrypt.hash(newPass, saltRounds);
+            user.password = hashedPassword
+            await user.save()
+            res.json({message:'successfully updated password'})
+        }else{
+            console.error("could not update pass")
+            res.json({message: "failed to update password"})
+        }
+    }
+    catch{
+        console.error("update operation has failed")
     }
 }).delete(async(req,res)=>{
     const id = req.body.userKey;
@@ -71,5 +103,31 @@ router.post("/register", async (req, res) => {
         res.status(500).json({ message: "Server error during registration" });
     }
 });
+
+router.route("/update").put(async(req,res)=>{
+    const { prevpass, pass: newPass, key } = req.body;
+
+  try {
+    const user = await User.findById(key);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const match = await bcrypt.compare(prevpass, user.password);
+    if (!match) {
+      return res.status(401).json({ message: "Incorrect current password" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newpass, saltRounds);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ message: "Server error during password update" });
+  }
+})
 
 export {router}
