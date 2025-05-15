@@ -27,7 +27,7 @@ router.route("/login").get(async(req,res)=>{
     const { username, password } = req.body; 
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ name : username });
 
         if (!user) {
             return res.json({ userExist: false });
@@ -59,7 +59,7 @@ router.route("/login").get(async(req,res)=>{
             res.json({message:'successfully updated password'})
         }else{
             console.error("could not update pass")
-            res.json({message: "failed to update password"})
+            res.status(500).json({message: "failed to update password"})
         }
     }
     catch{
@@ -68,8 +68,9 @@ router.route("/login").get(async(req,res)=>{
 }).delete(async(req,res)=>{
     const id = req.body.userKey;
     try{
+        const data = await Projects.deleteMany({userKey: id})
         const success = await User.deleteOne({_id:id});
-        if(success){
+        if(success && data){
             res.json({success:success});
         }else{
             res.json({success:false});
@@ -77,6 +78,7 @@ router.route("/login").get(async(req,res)=>{
     
     }catch{
         console.error("Deletion could not be fulfilled")
+        res.status(500).json({success:false})
     }
     
 
@@ -85,13 +87,13 @@ router.post("/register", async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ name : username });
         if (existingUser) {
             return res.json({ message: "Username already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        const newUser = new User({ username, password: hashedPassword });
+        const newUser = new User({ name:username, password: hashedPassword });
         const savedUser = await newUser.save();
 
         const project = new Projects({ userKey: savedUser._id });
@@ -105,7 +107,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.route("/update").put(async(req,res)=>{
-    const { prevpass, pass: newPass, key } = req.body;
+    const { prevpass, pass, key } = req.body;
 
   try {
     const user = await User.findById(key);
@@ -118,9 +120,9 @@ router.route("/update").put(async(req,res)=>{
       return res.status(401).json({ message: "Incorrect current password" });
     }
 
-    const hashedPassword = await bcrypt.hash(newpass, saltRounds);
-    user.password = hashedPassword;
-    await user.save();
+    const hashedPassword = await bcrypt.hash(pass, saltRounds);
+    const updateUser = await User.findByIdAndUpdate(key,{password : hashedPassword},{ runValidators: true })
+    
 
     res.status(200).json({ message: "Password updated successfully" });
 
