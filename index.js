@@ -29,8 +29,9 @@ const app = express()
 app.use(cors({
   origin: 'https://capstone-h59f.onrender.com', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  //credentials: true
 }));
+
+app.options('*', cors()); // Allow preflight CORS requests
 app.use(express.json())
 app.use('/authenticate',authenticate)
 app.use('/userData',userData)
