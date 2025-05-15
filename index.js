@@ -38,7 +38,9 @@ app.use('/userData',userData)
 app.use('/fetchQuote',fetchQuote)
 //app.use('/seed/populate',seed)
 
-
+app.get("/",(req,res)=>{
+    res.json({message:" backend is live "})
+})
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
