@@ -14,8 +14,8 @@ import { router as fetchQuote } from './routes/fetchQuote.js'
 import cors from 'cors'
 
 
+
 dotenv.config()
-console.log("Mongo URI is:", process.env.ATLAS_URI)
 mongoose.connect(process.env.ATLAS_URI)
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB')
@@ -23,7 +23,11 @@ mongoose.connection.once('open', () => {
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: 'https://capstone-h59f.onrender.com', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json())
 app.use('/authenticate',authenticate)
 app.use('/userData',userData)
