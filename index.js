@@ -26,21 +26,19 @@ mongoose.connection.once('open', () => {
 
 const app = express()
 
+
 app.use(cors({
   origin: 'https://capstone-h59f.onrender.com', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
-app.options('*', cors());
 app.use(express.json())
 app.use('/authenticate',authenticate)
 app.use('/userData',userData)
 app.use('/fetchQuote',fetchQuote)
 //app.use('/seed/populate',seed)
 
-app.get("/",(req,res)=>{
-    res.json({message:" backend is live "})
-})
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
