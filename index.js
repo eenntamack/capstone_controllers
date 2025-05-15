@@ -31,7 +31,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
-app.options('*', cors()); // Allow preflight CORS requests
+app.options('*', cors());
 app.use(express.json())
 app.use('/authenticate',authenticate)
 app.use('/userData',userData)
