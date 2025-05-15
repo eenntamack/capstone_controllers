@@ -26,7 +26,7 @@ const app = express()
 app.use(cors({
   origin: 'https://capstone-h59f.onrender.com', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  //credentials: true
 }));
 app.use(express.json())
 app.use('/authenticate',authenticate)
