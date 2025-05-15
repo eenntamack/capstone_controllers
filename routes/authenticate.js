@@ -12,18 +12,7 @@ const router = express.Router()
 const User = mongoose.models.user || mongoose.model('user', user)
 const Projects = mongoose.models.projects || mongoose.model('projects',projectSchema)
 
-router.route("/login").get(async(req,res)=>{
-    const key = req.params.userKey;
-    const pass = req.params.pass;
-    
-    const user = await User.findById(key)
-    const match = await bcrypt.compare(pass, user.password);
-    if(match){
-        res.json({password: user.password, inputPassword:match})
-    }else{
-        console.error("error fetching user")
-    }
-}).post( async (req, res) => {
+router.route("/login").post( async (req, res) => {
     const { username, password } = req.body; 
 
     try {
