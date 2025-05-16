@@ -31,7 +31,7 @@ router.route("/login").post( async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Server error during login" });
+        return res.status(500).json({ message: "Server error during login" });
     }
 }).put(async(req,res)=>{
     const newPass = req.body.newPass
@@ -45,10 +45,10 @@ router.route("/login").post( async (req, res) => {
             const hashedPassword = await bcrypt.hash(newPass, saltRounds);
             user.password = hashedPassword
             await user.save()
-            res.json({message:'successfully updated password'})
+            return res.json({message:'successfully updated password'})
         }else{
             console.error("could not update pass")
-            res.status(500).json({message: "failed to update password"})
+            return res.status(500).json({message: "failed to update password"})
         }
     }
     catch{
@@ -60,14 +60,14 @@ router.route("/login").post( async (req, res) => {
         const data = await Projects.deleteMany({userKey: id})
         const success = await User.deleteOne({_id:id});
         if(success && data){
-            res.json({success:success});
+            return res.json({success:success});
         }else{
-            res.json({success:false});
+            return res.json({success:false});
         }
     
     }catch{
         console.error("Deletion could not be fulfilled")
-        res.status(500).json({success:false})
+        return res.status(500).json({success:false})
     }
     
 
@@ -88,10 +88,10 @@ router.post("/register", async (req, res) => {
         const project = new Projects({ userKey: savedUser._id });
         await project.save();
 
-        res.json({ message: "User registered successfully" });
+        return res.json({ message: "User registered successfully" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Server error during registration" });
+        return res.status(500).json({ message: "Server error during registration" });
     }
 });
 
@@ -117,7 +117,7 @@ router.route("/update").put(async(req,res)=>{
 
   } catch (error) {
     console.error("Error updating password:", error);
-    res.status(500).json({ message: "Server error during password update" });
+    return res.status(500).json({ message: "Server error during password update" });
   }
 })
 

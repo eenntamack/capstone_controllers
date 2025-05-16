@@ -9,10 +9,10 @@ router.route("/").get(async (req, res) => {
   try {
     const response = await axios.get("https://zenquotes.io/api/quotes");
     console.log(response.data)
-    res.json({ data: response.data });
+    return res.json({ data: response.data });
   } catch (error) {
     console.error("Error processing quotes", error);
-    res.status(500).json({ message: "Could not fetch quotes" });
+    return res.status(500).json({ message: "Could not fetch quotes" });
   }
 });
 

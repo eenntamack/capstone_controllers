@@ -13,10 +13,10 @@ router.route("/").get( async (req, res) => {
         if (!userKey) return res.status(400).json({ message: "Missing userKey in query" });
 
         const projects = await Projects.find({ userKey: userKey });
-        res.json({ data: projects });
+        return res.json({ data: projects });
     } catch (err) {
         console.error("Error fetching projects:", err);
-        res.status(500).json({ message: "Server error fetching projects" });
+        return res.status(500).json({ message: "Server error fetching projects" });
     }
 })
 .post(async (req,res)=>{
@@ -43,19 +43,16 @@ router.route("/").get( async (req, res) => {
     }
     const saved = await project.save()
     //const project = await Projects.find({userKey:userKey})
-    res.json({data:saved})
+    return res.json({data:saved})
 }).delete(async (req,res)=>{
     try{
         const userKey = req.body.userKey;
         const clearData = await Projects.deleteMany({userKey:userKey})
        
         if(clearData.deletedCount > 0){
-            
-       
-                res.status(200).json({success:true})
-            
+                return res.status(200).json({success:true})
         }else{
-            res.json({success:false})
+                return res.json({success:false})
         }
        
     }catch(e){
