@@ -29,9 +29,12 @@ router.route("/login").post( async (req, res) => {
             passwordCorrect: match,
             userKey: user._id
         });
+
     } catch (err) {
+
         console.error(err);
         return res.status(500).json({ message: "Server error during login" });
+        
     }
 }).put(async(req,res)=>{
     const newPass = req.body.newPass

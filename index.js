@@ -18,12 +18,12 @@ const PORT = process.env.PORT || 3000;
 
 
 
-dotenv.config()
-mongoose.connect(process.env.ATLAS_URI)
-mongoose.connection.once('open', () => {
-    console.log('Connected to MongoDB')
-})
-
+try {
+  await mongoose.connect(process.env.ATLAS_URI);
+  console.log("Connected to MongoDB");
+} catch (err) {
+  console.error("MongoDB connection error:", err);
+}
 const app = express()
 
 

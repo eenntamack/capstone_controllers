@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 
-
 const image = new mongoose.Schema({
     image: {
         data: Buffer,
@@ -17,14 +16,12 @@ const chapter = new mongoose.Schema({
 
 })
 
-
 const chapters = new mongoose.Schema({
     name: {type: String, required: true},
     text: [chapter],
     image: {type: image},
     entries: {type: Number, required: true}
 })
-
 
 const log = new mongoose.Schema({
     date: {type: Date, default: () => {
